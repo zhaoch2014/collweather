@@ -57,7 +57,7 @@ public class Utility {
     }
 
 
-    public static boolean handleCountryResponse(String response, int cityId) {
+    public static boolean handleCountyResponse(String response, int cityId) {
         if(!TextUtils.isEmpty(response)) {
             try {
                 JSONArray allCountries = new JSONArray(response);

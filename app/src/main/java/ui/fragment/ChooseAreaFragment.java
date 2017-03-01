@@ -95,7 +95,7 @@ public class ChooseAreaFragment extends Fragment {
         backButton = (Button) view.findViewById(R.id.back_button);
         titleText = (TextView) view.findViewById(R.id.title_text);
         listView = (ListView) view.findViewById(R.id.list_view);
-        adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_expandable_list_item_1);
+        adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,dataList);  //TODO 这里少一下啊list参数
         listView.setAdapter(adapter);
         return view;
     }
@@ -108,10 +108,10 @@ public class ChooseAreaFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(currentLevel == LEVEL_PROVINCE) {
                     selectedProvince = provinceList.get(position);
-                            queryCitise();
+                    queryCitise();
                 }else if(currentLevel == LEVEL_CITY) {
                     selectedCity = cityList.get(position);
-                    queryCountry();
+                    queryCounty();
                 }
             }
 
@@ -120,21 +120,20 @@ public class ChooseAreaFragment extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(currentLevel == LEVEL_CITY) {
-                    queryProvince();
-                } else if(currentLevel == LEVEL_COUNTY) {
+                if (currentLevel == LEVEL_COUNTY) {
                     queryCitise();
+                } else if(currentLevel == LEVEL_CITY) {
+                    queryProvinces();
                 }
             }
         });
-        queryProvince();
-
+        queryProvinces();
     }
 
     /**
      * 查询省
      */
-    private void queryProvince() {
+    private void queryProvinces() {
         titleText.setText("中国");
         backButton.setVisibility(View.GONE);
         provinceList = DataSupport.findAll(Province.class);
@@ -157,7 +156,7 @@ public class ChooseAreaFragment extends Fragment {
 
 
 
-    private void queryCountry() {
+    private void queryCounty() {
         titleText.setText(selectedCity.getCityName());
         backButton.setVisibility(View.VISIBLE);
         countyList = DataSupport.where("cityid = ?", String.valueOf(selectedCity.getId())).find(County.class);
@@ -173,7 +172,7 @@ public class ChooseAreaFragment extends Fragment {
             int provinceCode = selectedProvince.getProvinceCode();
             int cityCode = selectedCity.getCityCode();
             String adress = "http://guolin.tech/api/china/" + provinceCode + cityCode;
-            queryService(adress,"country");
+            queryService(adress,"county");
         }
 
 
@@ -211,7 +210,7 @@ public class ChooseAreaFragment extends Fragment {
                 } else if ("city".equals(type)) {
                     result = Utility.handleCityReponse(responseText, selectedProvince.getId());
                 } else if ("county".equals(type)) {
-                    result = Utility.handleCountryResponse(responseText, selectedCity.getId());
+                    result = Utility.handleCountyResponse(responseText, selectedCity.getId());
                 }
                 if (result) {
                     getActivity().runOnUiThread(new Runnable() {
@@ -219,11 +218,11 @@ public class ChooseAreaFragment extends Fragment {
                         public void run() {
                             closeProgressDialog();
                             if ("province".equals(type)) {
-                                queryProvince();
+                                queryProvinces();
                             } else if ("city".equals(type)) {
                                 queryCitise();
                             } else if ("county".equals(type)) {
-                                queryCountry();
+                                queryCounty();
                             }
                         }
                     });
