@@ -4,7 +4,7 @@
     <list>
 
         <mapping class="com.demo.zcollweather.db.City" />
-        <mapping class="com.demo.zcollweather.db.Country" />
+        <mapping class="com.demo.zcollweather.db.County" />
         <mapping class="com.demo.zcollweather.db.Province" />
 
     </list>

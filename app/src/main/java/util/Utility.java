@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import db.City;
-import db.Country;
+import db.County;
 import db.Province;
 
 /**
@@ -16,12 +16,12 @@ import db.Province;
 
 public class Utility {
 
-    public static boolean handleProvinceRequest(String response) {
+    public static boolean handleProvinceResponse(String response) {
         if (!TextUtils.isEmpty(response)) {
             try {
-                JSONArray allProvince = new JSONArray(response);
-                for (int i = 0; i < allProvince.length(); i++) {
-                    JSONObject provinceObject = allProvince.getJSONObject(i);
+                JSONArray allProvinces = new JSONArray(response);
+                for (int i = 0; i < allProvinces.length(); i++) {
+                    JSONObject provinceObject = allProvinces.getJSONObject(i);
                     Province province = new Province();
                     province.setProvinceName(provinceObject.getString("name"));
                     province.setProvinceCode(provinceObject.getInt("id"));
@@ -35,16 +35,16 @@ public class Utility {
         return false;
     }
 
-    public static boolean handleCityRequest(String response, int provinceId) {
+    public static boolean handleCityReponse(String response, int provinceId) {
         if(!TextUtils.isEmpty(response)){
 
             try {
-                JSONArray allCity = new JSONArray(response);
-                for (int i = 0; i < allCity.length(); i++) {
-                    JSONObject cityObject = allCity.getJSONObject(i);
+                JSONArray allCities = new JSONArray(response);
+                for (int i = 0; i < allCities.length(); i++) {
+                    JSONObject cityObject = allCities.getJSONObject(i);
                     City city = new City();
                     city.setCityName(cityObject.getString("name"));
-                    city.getCityCode(cityObject.getInt("id"));
+                    city.setCityCode(cityObject.getInt("id"));      //TODO 可能是这么写错了
                     city.setProvinceId(provinceId);
                     city.save();
                 }
@@ -57,17 +57,17 @@ public class Utility {
     }
 
 
-    public static boolean handleCountry(String response, int cityId) {
+    public static boolean handleCountryResponse(String response, int cityId) {
         if(!TextUtils.isEmpty(response)) {
             try {
-                JSONArray allCountry = new JSONArray(response);
-                for (int i = 0; i < allCountry.length(); i++) {
-                    JSONObject countryObject = allCountry.getJSONObject(i);
-                    Country country = new Country();
-                    country.setCountryCode(countryObject.getInt("id"));
-                    country.setCountryName(countryObject.getString("name"));
-                    country.setCityId(cityId);
-                    country.save();
+                JSONArray allCountries = new JSONArray(response);
+                for (int i = 0; i < allCountries.length(); i++) {
+                    JSONObject countryObject = allCountries.getJSONObject(i);
+                    County county = new County();
+                    county.setWeatherId(countryObject.getString("weather_id"));
+                    county.setCountyName(countryObject.getString("name"));
+                    county.setCityId(cityId);
+                    county.save();
 
                 }
                 return true;

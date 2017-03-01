@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import db.City;
-import db.Country;
+import db.County;
 import db.Province;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -70,7 +70,7 @@ public class ChooseAreaFragment extends Fragment {
     /**
      * 县列表
      */
-    private List<Country> countyList;
+    private List<County> countyList;
 
     /**
      * 选中的省份
@@ -160,11 +160,11 @@ public class ChooseAreaFragment extends Fragment {
     private void queryCountry() {
         titleText.setText(selectedCity.getCityName());
         backButton.setVisibility(View.VISIBLE);
-        countyList = DataSupport.where("cityid = ?", String.valueOf(selectedCity.getId())).find(Country.class);
+        countyList = DataSupport.where("cityid = ?", String.valueOf(selectedCity.getId())).find(County.class);
         if(countyList.size() > 0) {
             dataList.clear();
-            for (Country country: countyList) {
-                dataList.add(country.getCountryName());
+            for (County county : countyList) {
+                dataList.add(county.getCountyName());
             }
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
@@ -207,11 +207,11 @@ public class ChooseAreaFragment extends Fragment {
                 String responseText = response.body().string();
                 boolean result = false;
                 if ("province".equals(type)) {
-                    result = Utility.handleProvinceRequest(responseText);
+                    result = Utility.handleProvinceResponse(responseText);
                 } else if ("city".equals(type)) {
-                    result = Utility.handleCityRequest(responseText, selectedProvince.getId());
+                    result = Utility.handleCityReponse(responseText, selectedProvince.getId());
                 } else if ("county".equals(type)) {
-                    result = Utility.handleCountry(responseText, selectedCity.getId());
+                    result = Utility.handleCountryResponse(responseText, selectedCity.getId());
                 }
                 if (result) {
                     getActivity().runOnUiThread(new Runnable() {
